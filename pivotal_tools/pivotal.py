@@ -224,14 +224,14 @@ class Project(object):
         """Trys to find a story, returns None is not found"""
         story_url = "https://www.pivotaltracker.com/services/v3/projects/{}/stories/{}".format(self.project_id, story_id)
 
-        resposne = _perform_pivotal_get(story_url)
-        # print resposne.text
-        if resposne.status_code == 404:
+        response = _perform_pivotal_get(story_url)
+        # print response.text
+        if response.status_code == 404:
             # Not Found
             return None
         else:
             #Found, parsing story
-            root = ET.fromstring(resposne.text.encode('ascii','ignore'))
+            root = ET.fromstring(response.text.encode('ascii','ignore'))
             return Story.from_node(root)
 
     def create_story(self,story_dict):
