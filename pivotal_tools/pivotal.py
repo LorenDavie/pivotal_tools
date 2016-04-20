@@ -193,7 +193,7 @@ class Project(object):
         projects_url = 'https://www.pivotaltracker.com/services/v3/projects'
         response = _perform_pivotal_get(projects_url)
 
-        root = ET.fromstring(response.text)
+        root = ET.fromstring(response.text.encode('ascii','ignore'))
         if root is not None:
             return [Project.from_node(project_node) for project_node in root]
 
@@ -202,7 +202,7 @@ class Project(object):
         url = "https://www.pivotaltracker.com/services/v3/projects/%s" % project_id
         response = _perform_pivotal_get(url)
 
-        project_node = ET.fromstring(response.text)
+        project_node = ET.fromstring(response.text.encode('ascii','ignore'))
         name = _parse_text(project_node, 'name')
         return Project(project_id, name)
 
@@ -216,7 +216,7 @@ class Project(object):
         stories_url = "https://www.pivotaltracker.com/services/v3/projects/{}/stories?filter={}".format(self.project_id, story_filter)
 
         response = _perform_pivotal_get(stories_url)
-        stories_root = ET.fromstring(response.text.encode('utf-8'))
+        stories_root = ET.fromstring(response.text.encode('ascii','ignore'))
 
         return [Story.from_node(story_node) for story_node in stories_root]
 
@@ -231,7 +231,7 @@ class Project(object):
             return None
         else:
             #Found, parsing story
-            root = ET.fromstring(resposne.text.encode('utf-8'))
+            root = ET.fromstring(resposne.text.encode('ascii','ignore'))
             return Story.from_node(root)
 
     def create_story(self,story_dict):
